@@ -7,25 +7,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.JOptionPane;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Classe responsável por criar o servidor e executar as ações do mesmo.
+ */
 public class Servidor {
-
-
-	// https://www.devmedia.com.br/trabalhando-com-json-em-java-o-pacote-org-json/25480
-	public static void main(String[] args) throws JSONException {
+	/**
+	 * Inicia a aplicação servidor. 
+	 */
+	public static void main(String[] args) {
+		new Servidor().servidor();
+		System.exit(0);
+	}
+	
+	/**
+	 * Cria o socket do servidor e espera pelo contato do cliente para exibir informações sobre os
+	 * dados que foram recebidos do mesmo.
+	 */
+	public void servidor(){
 		ServerSocket servidor = null;
 		try {
 			servidor = new ServerSocket(1717);
 			servidor.setSoTimeout(60000);
-			System.out.println("Servidor ouvindo a porta 1717");
+			System.out.println("Servidor ouvindo a porta 1717...");
 
 			Socket cliente = servidor.accept();
-			System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
+			System.out.println("Cliente conectado >>> " + cliente.getInetAddress().getHostAddress());
 			Scanner entrada = new Scanner(cliente.getInputStream());
 
 			String dados = "";
@@ -58,7 +68,7 @@ public class Servidor {
 				turma.addAluno(aluno);
 			}
 
-			JOptionPane.showMessageDialog(null, String.format("A turma %s de %d do curso %s possui %d alunos, dos quais %d estão devidamente matriculados.", turma.getCurso(), turma.getAno(), turma.getCurso(),turma.numeroDeAlunos(), turma.numeroDeAlunosMatriculados()));				
+			System.out.println(String.format("A turma %s de %d do curso %s possui %d alunos, dos quais %d estão devidamente matriculados.", turma.getCurso(), turma.getAno(), turma.getCurso(),turma.numeroDeAlunos(), turma.numeroDeAlunosMatriculados()));
 			entrada.close();
 			cliente.close();
 			servidor.close();
@@ -71,18 +81,17 @@ public class Servidor {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
+		} catch (JSONException e) {
+			System.err.println("Erro de conversão JSON!");
+			e.printStackTrace();
 		}
-		System.exit(0);
 	}
 
 
-	public static Turma formatarDados(String dados){
-		Turma turma = new Turma();
-
-		return turma;
-	}
-
-
+	/**
+	 * Classe usada para manipular os dados de alunos.
+	 *
+	 */
 	public static class Aluno{
 		Long id, idTurma;
 		String nome;
@@ -133,6 +142,10 @@ public class Servidor {
 
 	}
 
+	/**
+	 * Classe usada para manipular os dados de turmas.
+	 *
+	 */
 	public static class Turma{
 		Long id;
 		int ano;
