@@ -8,7 +8,8 @@ o ``JSON`` e exibe as informações da turma cadastrada.
 Para isso, foi usado ``Python`` para o lado cliente e ``Java`` para o lado servidor da aplicação, além da notação ``JSON``.
 
 Como executar:
-	``../webservices$ sh app.sh``
+
+	``$ sh app.sh``
 
 
 
