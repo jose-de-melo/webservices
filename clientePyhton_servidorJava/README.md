@@ -9,7 +9,7 @@ Para isso, foi usado ``Python`` para o lado cliente e ``Java`` para o lado servi
 
 Como executar:
 
-	``$ sh app.sh``
+	$ sh app.sh
 
 
 
