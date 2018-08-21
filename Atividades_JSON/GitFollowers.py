@@ -30,8 +30,13 @@ def ler_nome_completo_usuario(loginUser):
         return strRequest
     else:
         jsonUser = json.loads(strRequest)
-        strReturn = str(jsonUser["name"])
-        return strReturn.encode('utf-8')
+        jUsername = jsonUser["name"]
+
+        if jUsername != None:
+            strReturn = str(jUsername.encode("utf-8"))
+            return strReturn + '({})'.format(loginUser)
+        else:
+            return 'Sem nome completo ({})'.format(loginUser)
 
 
 def exibir_repositorios_user(loginUser):
@@ -41,12 +46,12 @@ def exibir_repositorios_user(loginUser):
 
     jsonRepos = []
 
-    request = request(url)
+    requestSTR = request(url)
 
-    if request == None:
-        return request
+    if requestSTR == None:
+        return requestSTR
     else:
-        jsonRepos = json.loads(request)
+        jsonRepos = json.loads(requestSTR)
         for jObj in jsonRepos:
             print("\t\t{}".format(jObj["name"]))
 
@@ -63,10 +68,11 @@ def ler_exibir_seguidores(loginUser):
     else:
         jsonFollowers = json.loads(strRequest)
 
-        print("\n%d Seguidores:\n" % len(jsonFollowers))
+        print("\n%d Seguidor(es):\n" % len(jsonFollowers))
         for jObject in jsonFollowers:
             nome = ler_nome_completo_usuario(jObject["login"])
             print("\t{}:".format(nome))
+            exibir_repositorios_user(jObject["login"])
 
 def ler_user():
     user = raw_input("Forneça o nome do usuário:\n>>> ")
@@ -77,7 +83,7 @@ def main():
     print("--- Consultar Usuários - GitHub")
     loginUser = ler_user()
     nomeCompletoUsuario = ler_nome_completo_usuario(loginUser)
-    
+
     if nomeCompletoUsuario != None:
         print("Usuário da Consulta: {}".format(nomeCompletoUsuario))
         ler_exibir_seguidores(loginUser)
