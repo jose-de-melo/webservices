@@ -10,22 +10,23 @@ urlFollowers = "https://api.github.com/users/{}/followers"
 urlRepos = "https://api.github.com/users/"
 urlReposComplemento = "/repos?type=owner"
 caminhoCache = "cache/"
+extensao = ".csh"
 
 
 def request(url):
     urlFormatada = url.replace("/", "-")
 
-    if os.path.exists(caminhoCache+urlFormatada):
-        return open(caminhoCache + urlFormatada, 'r').read()
+    if os.path.exists(caminhoCache + urlFormatada + extensao):
+        return open(caminhoCache + urlFormatada + extensao, 'r').read()
 
     else:
         try:
             conteudo = ur.urlopen(url).read()
-            newCache = open(caminhoCache + urlFormatada + ".csh", 'w')
+            newCache = open(caminhoCache + urlFormatada + extensao, 'w')
             newCache.write(conteudo)
             return conteudo
         except Exception as ex:
-            print('Conexão recusada')
+            print('>> A requisição foi recusada recusada!')
             return None
 
 
@@ -83,8 +84,9 @@ def ler_exibir_seguidores(loginUser):
         print("\n%d Seguidor(es):\n" % len(jsonFollowers))
         for jObject in jsonFollowers:
             nome = ler_nome_completo_usuario(jObject["login"])
-            print("\t{}:".format(nome))
-            exibir_repositorios_user(jObject["login"])
+            if nome != None:
+                print("\t{}:".format(nome))
+                exibir_repositorios_user(jObject["login"])
 
 def ler_user():
     user = raw_input("Forneça o nome do usuário:\n>>> ")
