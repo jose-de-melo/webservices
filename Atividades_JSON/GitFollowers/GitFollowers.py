@@ -26,7 +26,7 @@ def request(url):
             newCache.write(conteudo)
             return conteudo
         except Exception as ex:
-            print('>> A requisição foi recusada recusada!')
+            print('>> A requisição foi recusada!')
             return None
 
 
