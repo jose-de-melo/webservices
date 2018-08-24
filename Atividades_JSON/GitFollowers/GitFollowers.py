@@ -2,19 +2,31 @@
 
 import json
 import urllib2 as ur
+import os.path
+
 
 urlModel = "https://api.github.com/users/"
 urlFollowers = "https://api.github.com/users/{}/followers"
 urlRepos = "https://api.github.com/users/"
 urlReposComplemento = "/repos?type=owner"
+caminhoCache = "cache/"
 
 
 def request(url):
-    try:
-        return ur.urlopen(url).read()
-    except Exception as ex:
-        print(ex)
-        return None
+    urlFormatada = url.replace("/", "-")
+
+    if os.path.exists(caminhoCache+urlFormatada):
+        return open(caminhoCache + urlFormatada, 'r').read()
+
+    else:
+        try:
+            conteudo = ur.urlopen(url).read()
+            newCache = open(caminhoCache + urlFormatada + ".csh", 'w')
+            newCache.write(conteudo)
+            return conteudo
+        except Exception as ex:
+            print('Conexão recusada')
+            return None
 
 
 def ler_nome_completo_usuario(loginUser):
