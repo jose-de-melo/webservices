@@ -38,10 +38,12 @@ def nomes_arquivos(retorno):
 
 @app.route('/arquivos/conteudo/<nome_arquivo>', methods=['GET'])
 def conteudo_arquivo(nome_arquivo):
-    print(diretorio_padrao + '/' + nome_arquivo)
-    arquivo = open('arquivos/' + nome_arquivo, 'r')
-    conteudo = arquivo.read()
-    return json.dumps({'conteudo': conteudo})
+    try:
+        arquivo = open('arquivos/' + nome_arquivo, 'r')
+        conteudo = arquivo.read()
+        return json.dumps({'status': 200, 'conteudo': conteudo})
+    except:
+        return json.dumps({'status': 771,'erro': 'O arquivo não existe!'})
 
 @app.route('/arquivos', methods=['DELETE'])
 def remover_todos_arquivos():
@@ -62,14 +64,14 @@ def remover_arquivo(nome_arquivo):
         os.remove(caminho_arquivo)
         return json.dumps({'status': 200, 'mensagem': 'OK'})
     else:
-        return json.dumps({'status': 771, 'mensagem': 'Arquivo nao encontrado'})
+        return json.dumps({'status': 771, 'mensagem': 'Arquivo não encontrado'})
 
 
 @app.route('/arquivos/<nome_arquivo>', methods=['PUT'])
 def atualizar_criar_arquivo(nome_arquivo):
     arquivo = diretorio_padrao + '/' + nome_arquivo
     arquivo = open(arquivo, 'w')
-    conteudo = request.form['dados']
+    conteudo = request.form['conteudo']
     arquivo.write(conteudo)
     arquivo.close()
     return json.dumps({'status':200})
